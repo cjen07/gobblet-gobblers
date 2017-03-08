@@ -50,3 +50,5 @@
 <div class="text-center">
   <button id="new_game" class="btn btn-primary hidden">NEW GAME</button>
 </div>
+
+<div id="elm-main" view="game_show" msg="<%= @name %>"></div>

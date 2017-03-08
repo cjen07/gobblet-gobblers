@@ -1,11 +1,1 @@
-<div class="form">
-  <%= form_for @conn, game_path(@conn, :create), [as: :game], fn(f) -> %>
-  <div class="input-group">
-    <%= text_input f, :name, placeholder: "Enter a game name",
-      autofocus: true, class: "form-control" %>
-    <span class="input-group-btn">
-      <%= submit "Play", class: "btn btn-primary" %>
-    </span>
-  </div>
-  <% end %>
-</div>
+<div id="elm-main" view="game_new" msg="<%= get_csrf_token() %>"></div>

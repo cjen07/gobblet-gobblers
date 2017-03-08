@@ -1,1 +1,1 @@
-<div id="elm-player-new" csrf="<%= get_csrf_token() %>"></div>
+<div id="elm-main" view="player_new" msg="<%= get_csrf_token() %>"></div>
