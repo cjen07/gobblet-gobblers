@@ -12,8 +12,9 @@ if (element) {
   Game.init(socket)
 }
 
-let elmDiv = document.getElementById('elm-player-new')
+let elmDiv = document.getElementById('elm-main')
 if (elmDiv) {
-  let csrf = elmDiv.getAttribute("csrf")
-  Elm.Main.embed(elmDiv, {csrf: csrf})
+  let view = elmDiv.getAttribute("view")
+  let msg = elmDiv.getAttribute("msg")
+  Elm.Main.embed(elmDiv, {view: view, msg: msg})
 }
