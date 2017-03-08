@@ -1,0 +1,52 @@
+<div id="full_game" class="msg hidden">
+  Sorry, the game is already full :(
+</div>
+
+<div id="waiting" class="msg hidden">
+  Waiting for a second player...
+</div>
+
+<table id="game" data-name="<%= @name %>" class="hidden">
+  <tr class="top">
+    <td id="index_0" class="left" data-index="0"></td>
+    <td id="index_1" data-index="1"></td>
+    <td id="index_2" class="right" data-index="2"></td>
+  </tr>
+  <tr>
+    <td id="index_3" class="left" data-index="3"></td>
+    <td id="index_4" data-index="4"></td>
+    <td id="index_5" class="right" data-index="5"></td>
+  </tr>
+  <tr class="bottom">
+    <td id="index_6" class="left" data-index="6"></td>
+    <td id="index_7" data-index="7"></td>
+    <td id="index_8" class="right" data-index="8"></td>
+  </tr>
+</table>
+
+<div id="stats" class="hidden">
+  <div id="x" class="block">
+    <div class="name">
+      <span id="x_turn" class="turn">&#8680;</span>
+      <span id="x_name"></span>
+      <span>(x)</span>
+    </div>
+    <div id="x_score" class="score"></div>
+  </div>
+  <div id="ties" class="block">
+    <div class="name">ties</div>
+    <div id="ties_score" class="score"></div>
+  </div>
+  <div id="o" class="block">
+    <div class="name">
+      <span id="o_name"></span>
+      <span>(o)</span>
+      <span id="o_turn" class="turn">&#8678;</span>
+    </div>
+    <div id="o_score" class="score"></div>
+  </div>
+</div>
+
+<div class="text-center">
+  <button id="new_game" class="btn btn-primary hidden">NEW GAME</button>
+</div>
