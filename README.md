@@ -15,3 +15,8 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [x] use phoenix v1.3
 - [x] replace js by elm
 - [ ] add gobblet logic
+
+### remark
+* this repo is highly encouraged by this [repo](https://github.com/ventsislaf/talks).
+* I fixed two bugs and updated for elixir v1.4 using Registry: [repo](https://github.com/cjen07/from_tictactoe_to_gobblet).
+* it is tictactoe with phoenix v1.3 and elm before I add logics of gobblet.
