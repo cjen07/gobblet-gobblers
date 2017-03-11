@@ -1,6 +1,6 @@
 defmodule Q do
 
-@size 3
+  @size 3
   @symbols [:x, :o]
   @init_data [[]] |> Stream.cycle |> Enum.take(@size * @size)
   @init_piece Enum.flat_map(@symbols, fn s -> 
@@ -11,7 +11,6 @@ defmodule Q do
   end)
 
   defstruct data: @init_data, pieces: @init_piece
-
 
   def drag_start(board, piece, pos) when piece in @init_piece do
     case pos do
@@ -24,28 +23,42 @@ defmodule Q do
         data = List.replace_at(board.data, pos, stack)
         case winner(data) do
           nil -> {:ok, %Q{board | data: data}}
-          _ -> :error
+          _ -> {:error, "your will lose"} 
         end
     end
   end
 
   def drag_end(board, piece1, pos1, pos2) when piece1 in @init_piece do
-    stack = board.data |> Enum.at(pos2)
-    piece2 = Enum.at(stack, 0)
     cond do
-      pos1 == pos2 -> 
-        data = List.replace_at(board.data, pos2, [piece1 | stack])
-        {:back, %Q{board | data: data}}
-        
-      piece2 == nil or elem(piece2, 2) < elem(piece1, 2) -> 
-        data = List.replace_at(board.data, pos2, [piece1 | stack])
-        case winner(data) do
-          nil -> {:ok, %Q{board | data: data}}
-          symbol -> {:win, symbol}
+      pos1 == pos2 ->
+        case pos2 do
+          9 ->
+            pieces = [piece1 | board.pieces]
+            {:back, %Q{board | pieces: pieces}}
+          _ ->
+            stack = board.data |> Enum.at(pos2)
+            data = List.replace_at(board.data, pos2, [piece1 | stack])
+            {:back, %Q{board | data: data}}
         end
 
       true ->
-        :error
+        cond do
+          pos2 == 9 ->
+            {:error, "no moving back"}
+          true ->
+            stack = board.data |> Enum.at(pos2)
+            piece2 = Enum.at(stack, 0)
+            cond do
+              piece2 == nil or elem(piece2, 2) < elem(piece1, 2) ->
+                data = List.replace_at(board.data, pos2, [piece1 | stack])
+                case winner(data) do
+                  nil -> {:ok, %Q{board | data: data}}
+                  symbol -> {:win, symbol}
+                end
+              true ->
+                {:error, "need larger piece"}
+            end  
+        end
     end
   end
 
@@ -54,7 +67,12 @@ defmodule Q do
   end
 
   def winner(data) do
-    do_winner(Enum.map(data, &(elem(Enum.at(&1, 0), 0))))
+    do_winner(Enum.map(data, fn e -> 
+      case Enum.at(e, 0) do
+        nil -> nil
+        l -> elem(l, 0)
+      end
+    end))
   end
 
   defp do_winner([
