@@ -27,9 +27,17 @@ defmodule Gobblet.Logic.Game do
     GenServer.call(game, {:leave, symbol})
   end
 
-  def put(game, symbol, pos) do
-    GenServer.call(game, {:put, symbol, pos})
+  def drag_start(game, piece, pos) do
+    GenServer.call(game, {:drag_start, piece, pos})
   end
+
+  def drag_end(game, piece, pos1, pos2) do
+    GenServer.call(game, {:drag_end, piece, pos1, pos2})
+  end
+
+  # def put(game, symbol, pos) do
+  #   GenServer.call(game, {:put, symbol, pos})
+  # end
 
   def new_round(game) do
     GenServer.call(game, :new_round)
@@ -82,31 +90,51 @@ defmodule Gobblet.Logic.Game do
     end
   end
 
-  def handle_call({:put, _symbol, _pos}, _from, %{finished: true} = state) do
+  def handle_call({:drag_start, _piece, _pos}, _from, %{finished: true} = state) do
     {:reply, :finished, state}
   end
 
-  def handle_call({:put, symbol, position}, _from, %{next: symbol} = state) do
-    case Logic.Board.put(state.board, symbol, position) do
+  def handle_call({:drag_start, {symbol, _, _} = piece, pos}, _from, %{next: symbol} = state) do
+    case Logic.Board.drag_start(state.board, piece, pos) do
       {:ok, board} ->
-        state = %{state | board: board}
-        cond do
-          winner = Logic.Board.winner(board) ->
-            new_state = finish_game(state, winner)
-            {:reply, {:winner, winner, new_state}, new_state}
-          Logic.Board.full?(board) ->
-            new_state = finish_game(state, :ties)
-            {:reply, {:draw, new_state}, new_state}
-          true ->
-            new_state = next_turn(state)
-            {:reply, {:ok, new_state}, new_state}
-        end
-      :error ->
-        {:reply, :retry, state}
+        new_state = %{state | board: board}
+        {:reply, {:ok, new_state}, new_state}
+
+      {:error, reason} ->
+        {:reply, {:retry, reason}, state}
     end
   end
 
-  def handle_call({:put, _symbol, _position}, _form, state) do
+  def handle_call({:drag_start, _piece, _pos}, _form, state) do
+    {:reply, :cheat, state}
+  end
+
+  def handle_call({:drag_end, _piece, _pos1, _pos2}, _from, %{finished: true} = state) do
+    {:reply, :finished, state}
+  end
+
+  def handle_call({:drag_end, {symbol, _, _} = piece, pos1, pos2}, _from, %{next: symbol} = state) do
+    case Logic.Board.drag_end(state.board, piece, pos1, pos2) do
+      {:ok, board} ->
+        state = %{state | board: board}
+        new_state = next_turn(state)
+        {:reply, {:ok, new_state}, new_state}
+
+      {:back, board} ->
+        new_state = %{state | board: board}
+        {:reply, {:ok, new_state}, new_state}
+
+      {:win, winner} ->
+        state = %{state | board: board}
+        new_state = finish_game(state, winner)
+        {:reply, {:winner, winner, new_state}, new_state}
+
+      {:error, reason} ->
+        {:reply, {:retry, reason}, state}
+    end
+  end
+
+  def handle_call({:drag_end, _piece, _pos1, _pos2}, _form, state) do
     {:reply, :cheat, state}
   end
 
