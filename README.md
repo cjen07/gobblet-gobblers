@@ -14,7 +14,9 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 ### to-do
 - [x] use phoenix v1.3
 - [x] replace js by elm
-- [ ] add gobblet logic
+- [x] add gobblet logic
+- [ ] add gobblet view
+- [ ] test and publish
 
 ### remark
 * this repo is highly encouraged by this [repo](https://github.com/ventsislaf/talks).
