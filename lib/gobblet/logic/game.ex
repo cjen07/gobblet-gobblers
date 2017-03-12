@@ -3,6 +3,8 @@ defmodule Gobblet.Logic.Game do
 
   alias Gobblet.Logic
 
+  require Logger
+
   @initial_score %{x: 0, ties: 0, o: 0}
 
   defstruct(

@@ -3,6 +3,8 @@ defmodule Gobblet.Web.GameChannel do
 
   alias Gobblet.Logic
 
+  require Logger
+
   def join("game:" <> name, _params, socket) do
     game = Logic.GameSupervisor.game_process(name)
     case Logic.Game.join(game, socket.assigns.player) do
@@ -19,6 +21,7 @@ defmodule Gobblet.Web.GameChannel do
   end
 
   def handle_in("drag_start", %{"piece" => piece, "pos" => pos}, socket) do
+    piece = [String.to_atom(piece["0"]), String.to_atom(piece["1"]), piece["2"]]
     game = Logic.GameSupervisor.game_process(socket.assigns.game)
     if socket.assigns.symbol == Enum.at(piece, 0) do
       case Logic.Game.drag_start(game, piece, String.to_integer(pos)) do
@@ -32,6 +35,7 @@ defmodule Gobblet.Web.GameChannel do
   end
 
   def handle_in("drag_end", %{"piece" => piece, "pos1" => pos1, "pos2" => pos2}, socket) do
+    piece = [String.to_atom(piece["0"]), String.to_atom(piece["1"]), piece["2"]]
     game = Logic.GameSupervisor.game_process(socket.assigns.game)
     if socket.assigns.symbol == Enum.at(piece, 0) do
       case Logic.Game.drag_end(game, piece, String.to_integer(pos1), String.to_integer(pos2)) do
