@@ -8,7 +8,7 @@ defmodule Gobblet.Logic.Board do
               Stream.cycle([:a, :b]),
               1..@size 
               |> Enum.flat_map(fn(x) -> [x, x] end)])
-  end)
+  end) |> Enum.map(&(Tuple.to_list(&1)))
 
   defstruct data: @init_data, pieces: @init_piece
 
@@ -51,11 +51,11 @@ defmodule Gobblet.Logic.Board do
             stack = board.data |> Enum.at(pos2)
             piece2 = Enum.at(stack, 0)
             cond do
-              piece2 == nil or elem(piece2, 2) < elem(piece1, 2) ->
+              piece2 == nil or Enum.at(piece2, 2) < Enum.at(piece1, 2) ->
                 data = List.replace_at(board.data, pos2, [piece1 | stack])
                 case winner(data) do
                   nil -> {:ok, %Logic.Board{board | data: data}}
-                  symbol -> {:win, symbol}
+                  symbol -> {:win, symbol, %Logic.Board{board | data: data}}
                 end
               true ->
                 {:error, "need larger piece"}
@@ -72,7 +72,7 @@ defmodule Gobblet.Logic.Board do
     do_winner(Enum.map(data, fn e -> 
       case Enum.at(e, 0) do
         nil -> nil
-        l -> elem(l, 0)
+        l -> Enum.at(l, 0)
       end
     end))
   end

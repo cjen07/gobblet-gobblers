@@ -20,7 +20,7 @@ defmodule Gobblet.Web.GameChannel do
 
   def handle_in("drag_start", %{"piece" => piece, "pos" => pos}, socket) do
     game = Logic.GameSupervisor.game_process(socket.assigns.game)
-    if socket.assigns.symbol == elem(piece, 0) do
+    if socket.assigns.symbol == Enum.at(piece, 0) do
       case Logic.Game.drag_start(game, piece, String.to_integer(pos)) do
         {:ok, game_state} ->
           broadcast! socket, "update_board", game_state
@@ -33,7 +33,7 @@ defmodule Gobblet.Web.GameChannel do
 
   def handle_in("drag_end", %{"piece" => piece, "pos1" => pos1, "pos2" => pos2}, socket) do
     game = Logic.GameSupervisor.game_process(socket.assigns.game)
-    if socket.assigns.symbol == elem(piece, 0) do
+    if socket.assigns.symbol == Enum.at(piece, 0) do
       case Logic.Game.drag_end(game, piece, String.to_integer(pos1), String.to_integer(pos2)) do
         {:ok, game_state} ->
           broadcast! socket, "update_board", game_state

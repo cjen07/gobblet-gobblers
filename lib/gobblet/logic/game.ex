@@ -35,10 +35,6 @@ defmodule Gobblet.Logic.Game do
     GenServer.call(game, {:drag_end, piece, pos1, pos2})
   end
 
-  # def put(game, symbol, pos) do
-  #   GenServer.call(game, {:put, symbol, pos})
-  # end
-
   def new_round(game) do
     GenServer.call(game, :new_round)
   end
@@ -94,7 +90,7 @@ defmodule Gobblet.Logic.Game do
     {:reply, :finished, state}
   end
 
-  def handle_call({:drag_start, {symbol, _, _} = piece, pos}, _from, %{next: symbol} = state) do
+  def handle_call({:drag_start, [symbol | _] = piece, pos}, _from, %{next: symbol} = state) do
     case Logic.Board.drag_start(state.board, piece, pos) do
       {:ok, board} ->
         new_state = %{state | board: board}
@@ -113,7 +109,7 @@ defmodule Gobblet.Logic.Game do
     {:reply, :finished, state}
   end
 
-  def handle_call({:drag_end, {symbol, _, _} = piece, pos1, pos2}, _from, %{next: symbol} = state) do
+  def handle_call({:drag_end, [symbol | _] = piece, pos1, pos2}, _from, %{next: symbol} = state) do
     case Logic.Board.drag_end(state.board, piece, pos1, pos2) do
       {:ok, board} ->
         state = %{state | board: board}
@@ -124,7 +120,7 @@ defmodule Gobblet.Logic.Game do
         new_state = %{state | board: board}
         {:reply, {:ok, new_state}, new_state}
 
-      {:win, winner} ->
+      {:win, winner, board} ->
         state = %{state | board: board}
         new_state = finish_game(state, winner)
         {:reply, {:winner, winner, new_state}, new_state}
