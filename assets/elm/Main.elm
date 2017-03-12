@@ -14,6 +14,8 @@ import Html.Events exposing (onClick)
 
 import Array exposing (Array, repeat, get)
 
+import Debug exposing (log)
+
 
 
 main : Program Flags Model Msg
@@ -53,8 +55,16 @@ type alias Stats =
   }
 
 
+type alias Piece =
+  { symbol : String
+  , mark : String
+  , size : Int
+  }
+
+
 type alias Board =
-  { pieces: Array (Maybe String)
+  { data: Array (List Piece)
+  , pieces: Array Piece
   , next: String
   }
 
@@ -75,7 +85,10 @@ init flags =
     stats = 
       Stats "" "" 0 0 0
     board = 
-      Board (repeat 9 Nothing) "x"
+      Board 
+      (repeat 9 [ Piece "" "" 0 ])
+      (repeat 12 (Piece "" "" 0))
+      "x"
   in 
   (Model visible flags stats board, Cmd.none)
 
@@ -96,10 +109,18 @@ type Msg
   | FinishGame JD.Value
 
 
+decodePiece : Decoder Piece
+decodePiece = 
+  JD.map3 Piece
+    (JD.field "0" JD.string)
+    (JD.field "1" JD.string)
+    (JD.field "2" JD.int)
+
 decodeBoard : Decoder Board
 decodeBoard = 
-  JD.map2 Board
-    (JD.at [ "board","data" ] (JD.array <| JD.nullable <| JD.string))
+  JD.map3 Board
+    (JD.at [ "board","data" ] (JD.array <| JD.list <| decodePiece))
+    (JD.at [ "board","pieces" ] (JD.array decodePiece))
     (JD.field "next" JD.string)
 
 
@@ -233,18 +254,24 @@ view model =
       _ -> formView flags
 
 
-pieceView : Int -> Array (Maybe String) -> Html Msg
-pieceView num pieces =
-  case get num pieces of
-    Just (Just value) -> text value
-    _ -> text ""
+dataView : Int -> Array (List Piece) -> Html Msg
+dataView num data =
+  case get num data of
+    Just data1 -> 
+      case List.head data1 of
+        Just piece ->
+          text (toString(piece.size) ++ piece.symbol)
+        _ ->
+          text ""
+    _ -> 
+      text ""
 
 
 boardView : Model -> Html Msg
 boardView model = 
   let
     { visible, flags, stats, board } = model
-    { pieces, next } = board
+    { data, pieces, next } = board
   in
   div [] 
     [ div 
@@ -256,19 +283,19 @@ boardView model =
     , table 
       [ id "game", attribute "data-name" flags.msg, classList [ ("hidden", visible.game) ] ]
       [ tr [ class "top" ]
-        [ td [ id "index_0", class "left", onClick (PutPiece "0") ] [ pieceView 0 pieces ]
-        , td [ id "index_1", onClick (PutPiece "1") ] [ pieceView 1 pieces ]
-        , td [ id "index_2", class "right", onClick (PutPiece "2") ] [ pieceView 2 pieces ]
+        [ td [ id "index_0", class "left", onClick (PutPiece "0") ] [ dataView 0 data ]
+        , td [ id "index_1", onClick (PutPiece "1") ] [ dataView 1 data ]
+        , td [ id "index_2", class "right", onClick (PutPiece "2") ] [ dataView 2 data ]
         ]
       , tr []
-        [ td [ id "index_3", class "left", onClick (PutPiece "3") ] [ pieceView 3 pieces ]
-        , td [ id "index_4", onClick (PutPiece "4") ] [ pieceView 4 pieces ]
-        , td [ id "index_5", class "right", onClick (PutPiece "5") ] [ pieceView 5 pieces ]
+        [ td [ id "index_3", class "left", onClick (PutPiece "3") ] [ dataView 3 data ]
+        , td [ id "index_4", onClick (PutPiece "4") ] [ dataView 4 data ]
+        , td [ id "index_5", class "right", onClick (PutPiece "5") ] [ dataView 5 data ]
         ]
       , tr [ class "bottom" ]
-        [ td [ id "index_6", class "left", onClick (PutPiece "6") ] [ pieceView 6 pieces ]
-        , td [ id "index_7", onClick (PutPiece "7") ] [ pieceView 7 pieces ]
-        , td [ id "index_8", class "right", onClick (PutPiece "8") ] [ pieceView 8 pieces ]
+        [ td [ id "index_6", class "left", onClick (PutPiece "6") ] [ dataView 6 data ]
+        , td [ id "index_7", onClick (PutPiece "7") ] [ dataView 7 data ]
+        , td [ id "index_8", class "right", onClick (PutPiece "8") ] [ dataView 8 data ]
         ]
       ]
     , div 
