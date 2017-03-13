@@ -68,12 +68,19 @@ type alias Board =
   , next: String
   }
 
+type alias DragState =
+  { start : Bool
+  , piece : Piece
+  , pos : Int
+  }
+
 
 type alias Model =
   { visible : Visible
   , flags : Flags 
   , stats : Stats
   , board : Board
+  , dragState : DragState
   }
 
 
@@ -89,8 +96,10 @@ init flags =
       (repeat 9 [ Piece "" "" 0 ])
       (repeat 12 (Piece "" "" 0))
       "x"
+    dragState =
+      DragState False (Piece "" "" 0) 0
   in 
-  (Model visible flags stats board, Cmd.none)
+    (Model visible (log "flags" flags) stats board dragState, Cmd.none)
 
 
 
@@ -98,10 +107,11 @@ init flags =
 
 
 type Msg 
-  = OnJoinOk
+  = None
+  | OnJoinOk
   | OnJoinError
   | NewGame
-  | PutPiece String
+  | DragMsg Piece Int
   | NewPlayer JD.Value
   | PlayerLeft JD.Value
   | UpdateBoard JD.Value
@@ -115,6 +125,19 @@ decodePiece =
     (JD.field "0" JD.string)
     (JD.field "1" JD.string)
     (JD.field "2" JD.int)
+
+
+encodePiece : Piece -> JE.Value
+encodePiece piece =
+  let
+    { symbol, mark, size } = piece
+  in
+    JE.object
+      [ ("0", JE.string symbol)
+      , ("1", JE.string mark)
+      , ("2", JE.int size)
+      ]
+
 
 decodeBoard : Decoder Board
 decodeBoard = 
@@ -151,9 +174,9 @@ updateStats resp =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   let
-    { visible, flags, stats, board } = model
+    { visible, flags, stats, board, dragState } = model
   in
-    case msg of
+    case log "msg" msg of
       OnJoinOk ->
         model ! []
       OnJoinError ->
@@ -164,13 +187,25 @@ update msg model =
             Push.init ("game:" ++ model.flags.msg) "new_round"
         in
           model ! [ Phoenix.push echoServer push ]
-      PutPiece piece ->
+      DragMsg piece pos ->
         let
-          push = 
-            Push.init ("game:" ++ model.flags.msg) "put"
-              |> Push.withPayload (JE.object [ ("index", JE.string piece) ])
+          (push, newDragState) =
+            case dragState.start of
+              False ->
+                (Push.init ("game:" ++ model.flags.msg) "drag_start"
+                  |> Push.withPayload (JE.object [ ("piece", encodePiece piece)
+                                                 , ("pos", JE.int pos) 
+                                                 ])
+                , DragState True piece pos)
+              True ->
+                (Push.init ("game:" ++ model.flags.msg) "drag_end"
+                  |> Push.withPayload (JE.object [ ("piece", encodePiece dragState.piece)
+                                                 , ("pos1", JE.int dragState.pos)
+                                                 , ("pos2", JE.int pos)
+                                                 ])
+                , DragState False (Piece "" "" 0) 0)
         in
-          model ! [ Phoenix.push echoServer push ]
+          { model | dragState = newDragState } ! [ Phoenix.push echoServer push ]
       NewPlayer resp ->
         case (updateBoard resp, updateStats resp) of
           (Just board, Just stats) ->
@@ -197,6 +232,8 @@ update msg model =
             { model | visible = { visible | newgame = False }, board = board, stats = stats } ! []
           _ ->
             model ! []
+      None ->
+        model ! []
 
 
 
@@ -267,10 +304,23 @@ dataView num data =
       text ""
 
 
+dragEvent : Int -> Array (List Piece) -> Msg
+dragEvent num data =
+  case get num data of
+    Just data1 -> 
+      case List.head data1 of
+        Just piece ->
+          DragMsg piece num
+        _ ->
+          None
+    _ -> 
+      None
+
+
 boardView : Model -> Html Msg
 boardView model = 
   let
-    { visible, flags, stats, board } = model
+    { visible, flags, stats, board, dragState } = model
     { data, pieces, next } = board
   in
   div [] 
@@ -283,19 +333,19 @@ boardView model =
     , table 
       [ id "game", attribute "data-name" flags.msg, classList [ ("hidden", visible.game) ] ]
       [ tr [ class "top" ]
-        [ td [ id "index_0", class "left", onClick (PutPiece "0") ] [ dataView 0 data ]
-        , td [ id "index_1", onClick (PutPiece "1") ] [ dataView 1 data ]
-        , td [ id "index_2", class "right", onClick (PutPiece "2") ] [ dataView 2 data ]
+        [ td [ id "index_0", class "left", onClick (dragEvent 0 data) ] [ dataView 0 data ]
+        , td [ id "index_1", onClick (dragEvent 1 data) ] [ dataView 1 data ]
+        , td [ id "index_2", class "right", onClick (dragEvent 2 data) ] [ dataView 2 data ]
         ]
       , tr []
-        [ td [ id "index_3", class "left", onClick (PutPiece "3") ] [ dataView 3 data ]
-        , td [ id "index_4", onClick (PutPiece "4") ] [ dataView 4 data ]
-        , td [ id "index_5", class "right", onClick (PutPiece "5") ] [ dataView 5 data ]
+        [ td [ id "index_3", class "left", onClick (dragEvent 3 data) ] [ dataView 3 data ]
+        , td [ id "index_4", onClick (dragEvent 4 data) ] [ dataView 4 data ]
+        , td [ id "index_5", class "right", onClick (dragEvent 5 data) ] [ dataView 5 data ]
         ]
       , tr [ class "bottom" ]
-        [ td [ id "index_6", class "left", onClick (PutPiece "6") ] [ dataView 6 data ]
-        , td [ id "index_7", onClick (PutPiece "7") ] [ dataView 7 data ]
-        , td [ id "index_8", class "right", onClick (PutPiece "8") ] [ dataView 8 data ]
+        [ td [ id "index_6", class "left", onClick (dragEvent 6 data) ] [ dataView 6 data ]
+        , td [ id "index_7", onClick (dragEvent 7 data) ] [ dataView 7 data ]
+        , td [ id "index_8", class "right", onClick (dragEvent 8 data) ] [ dataView 8 data ]
         ]
       ]
     , div 

@@ -24,7 +24,7 @@ defmodule Gobblet.Web.GameChannel do
     piece = [String.to_atom(piece["0"]), String.to_atom(piece["1"]), piece["2"]]
     game = Logic.GameSupervisor.game_process(socket.assigns.game)
     if socket.assigns.symbol == Enum.at(piece, 0) do
-      case Logic.Game.drag_start(game, piece, String.to_integer(pos)) do
+      case Logic.Game.drag_start(game, piece, pos) do
         {:ok, game_state} ->
           broadcast! socket, "update_board", game_state
         _ ->
@@ -38,7 +38,7 @@ defmodule Gobblet.Web.GameChannel do
     piece = [String.to_atom(piece["0"]), String.to_atom(piece["1"]), piece["2"]]
     game = Logic.GameSupervisor.game_process(socket.assigns.game)
     if socket.assigns.symbol == Enum.at(piece, 0) do
-      case Logic.Game.drag_end(game, piece, String.to_integer(pos1), String.to_integer(pos2)) do
+      case Logic.Game.drag_end(game, piece, pos1, pos2) do
         {:ok, game_state} ->
           broadcast! socket, "update_board", game_state
         {:back, game_state} ->
