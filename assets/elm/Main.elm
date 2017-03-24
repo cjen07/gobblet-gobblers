@@ -304,6 +304,42 @@ dataView num data =
       text ""
 
 
+pickPieces : String -> (Int, Piece) -> Bool
+pickPieces symbol int_piece =
+  symbol == (Tuple.second int_piece).symbol
+
+
+showPiece : Int -> Int -> Int -> (Int, Piece) -> Html Msg
+showPiece first last index int_piece =
+  let
+    (pos, piece) = int_piece
+  in
+    td
+      [ classList [ ("left", index == first), ("right", index == last) ] ]
+      [ text (toString(piece.size) ++ piece.symbol) ]
+
+
+showPieces : Array (Int, Piece) -> List (Html Msg)
+showPieces pieces =
+  let
+    first = 0
+    last = (Array.length pieces) - 1
+  in
+    Array.toList <| Array.indexedMap (showPiece first last) pieces
+
+
+piecesView : String-> Array Piece -> Html Msg
+piecesView symbol pieces =
+  let
+    my_pieces = Array.fromList <| List.filter (pickPieces symbol) (Array.toIndexedList pieces)
+  in
+    table
+      [ id (symbol ++ "pieces"), class "pieces" ]
+      [ tr [ classList [ ("top", True), ("bottom", True) ] ]
+        (showPieces my_pieces)
+      ]
+
+
 dragEvent : Int -> Array (List Piece) -> Msg
 dragEvent num data =
   case get num data of
@@ -361,6 +397,7 @@ boardView model =
           , span [] [ text "(x)" ]
           ]
         , div [ id "x_score", class "score" ] [ text <| toString <| stats.xScore ]
+        , (piecesView "x" pieces)
         ]
       , div 
         [ id "ties", class "block" ] 
@@ -378,6 +415,7 @@ boardView model =
             [ text "⇦" ]
           ]
         , div [ id "o_score", class "score" ] [ text <| toString <| stats.oScore ]
+        , (piecesView "o" pieces)
         ]
       ]
     , div 
