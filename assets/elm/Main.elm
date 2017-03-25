@@ -176,7 +176,7 @@ update msg model =
   let
     { visible, flags, stats, board, dragState } = model
   in
-    case log "msg" msg of
+    case msg of
       OnJoinOk ->
         model ! []
       OnJoinError ->
@@ -217,7 +217,11 @@ update msg model =
       UpdateBoard resp ->
         case updateBoard resp of
           Just board ->
-            { model | board = board } ! []
+            case dragState.piece.symbol == board.next of
+              True ->
+                { model | board = board } ! []
+              False ->
+                { model | board = board, dragState = (DragState False (Piece "" "" 0) 0) } ! []            
           _ ->
             model ! []
       NewRound resp ->
@@ -309,34 +313,41 @@ pickPieces symbol int_piece =
   symbol == (Tuple.second int_piece).symbol
 
 
-showPiece : Int -> Int -> Int -> (Int, Piece) -> Html Msg
-showPiece first last index int_piece =
+pickEvent : Bool -> Piece -> Msg
+pickEvent my_turn piece = 
+  case my_turn of
+    True -> DragMsg piece 9
+    False -> None
+
+
+showPiece : Bool -> Int -> Int -> Int -> (Int, Piece) -> Html Msg
+showPiece my_turn first last index int_piece =
   let
     (pos, piece) = int_piece
   in
     td
-      [ classList [ ("left", index == first), ("right", index == last) ] ]
+      [ classList [ ("left", index == first), ("right", index == last) ], onClick (pickEvent my_turn piece) ]
       [ text (toString(piece.size) ++ piece.symbol) ]
 
 
-showPieces : Array (Int, Piece) -> List (Html Msg)
-showPieces pieces =
+showPieces : Bool -> Array (Int, Piece) -> List (Html Msg)
+showPieces my_turn pieces =
   let
     first = 0
     last = (Array.length pieces) - 1
   in
-    Array.toList <| Array.indexedMap (showPiece first last) pieces
+    Array.toList <| Array.indexedMap (showPiece my_turn first last) pieces
 
 
-piecesView : String-> Array Piece -> Html Msg
-piecesView symbol pieces =
+piecesView : String -> Bool -> Array Piece -> Html Msg
+piecesView symbol my_turn pieces =
   let
     my_pieces = Array.fromList <| List.filter (pickPieces symbol) (Array.toIndexedList pieces)
   in
     table
       [ id (symbol ++ "pieces"), class "pieces" ]
       [ tr [ classList [ ("top", True), ("bottom", True) ] ]
-        (showPieces my_pieces)
+        (showPieces my_turn my_pieces)
       ]
 
 
@@ -348,7 +359,7 @@ dragEvent num data =
         Just piece ->
           DragMsg piece num
         _ ->
-          None
+          DragMsg (Piece "" "" 0) num
     _ -> 
       None
 
@@ -397,7 +408,7 @@ boardView model =
           , span [] [ text "(x)" ]
           ]
         , div [ id "x_score", class "score" ] [ text <| toString <| stats.xScore ]
-        , (piecesView "x" pieces)
+        , (piecesView "x" (next == "x") pieces)
         ]
       , div 
         [ id "ties", class "block" ] 
@@ -415,7 +426,7 @@ boardView model =
             [ text "⇦" ]
           ]
         , div [ id "o_score", class "score" ] [ text <| toString <| stats.oScore ]
-        , (piecesView "o" pieces)
+        , (piecesView "o" (next == "o") pieces)
         ]
       ]
     , div 

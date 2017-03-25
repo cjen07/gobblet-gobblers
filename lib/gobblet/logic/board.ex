@@ -23,10 +23,11 @@ defmodule Gobblet.Logic.Board do
       _ -> 
         stack = board.data |> Enum.at(pos) |> tl
         data = List.replace_at(board.data, pos, stack)
-        case winner(data) do
-          nil -> {:ok, %Logic.Board{board | data: data}}
-          _ -> {:error, "your will lose"} 
-        end
+        # case winner(data) do
+        #   nil -> {:ok, %Logic.Board{board | data: data}}
+        #   _ -> {:error, "your will lose"} 
+        # end
+        {:ok, %Logic.Board{board | data: data}}
     end
   end
 
@@ -58,7 +59,8 @@ defmodule Gobblet.Logic.Board do
                   symbol -> {:win, symbol, %Logic.Board{board | data: data}}
                 end
               true ->
-                {:error, "need larger piece"}
+                # {:error, "need larger piece"}
+                drag_end(board, piece1, pos1, pos1)
             end  
         end
     end
