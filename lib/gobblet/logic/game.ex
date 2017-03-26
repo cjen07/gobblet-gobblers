@@ -140,6 +140,10 @@ defmodule Gobblet.Logic.Game do
         new_state = %{state | board: board}
         {:reply, {:ok, new_state}, new_state}
 
+      {:draw, board} ->
+        new_state = tied_game(%{state | board: board})
+        {:reply, {:draw, new_state}, new_state}
+
       {:win, winner, board} ->
         state = %{state | board: board}
         new_state = finish_game(state, winner)
@@ -156,6 +160,11 @@ defmodule Gobblet.Logic.Game do
 
   defp finish_game(state, symbol) do
     score = Map.update!(state.score, symbol, &(&1 + 1))
+    %{state | score: score, finished: true}
+  end
+
+  defp tied_game(state) do
+    score = Map.update!(state.score, :ties, &(&1 + 1))
     %{state | score: score, finished: true}
   end
 

@@ -43,6 +43,8 @@ defmodule Gobblet.Web.GameChannel do
           broadcast! socket, "update_board", game_state
         {:back, game_state} ->
           broadcast! socket, "update_board", game_state
+        {:draw, game_state} ->
+          broadcast! socket, "finish_game", game_state
         {:winner, _symbol, game_state} ->
           broadcast! socket, "finish_game", game_state
         _ ->

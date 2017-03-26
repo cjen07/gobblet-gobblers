@@ -23,10 +23,6 @@ defmodule Gobblet.Logic.Board do
       _ -> 
         stack = board.data |> Enum.at(pos) |> tl
         data = List.replace_at(board.data, pos, stack)
-        # case winner(data) do
-        #   nil -> {:ok, %Logic.Board{board | data: data}}
-        #   _ -> {:error, "your will lose"} 
-        # end
         {:ok, %Logic.Board{board | data: data}}
     end
   end
@@ -56,6 +52,7 @@ defmodule Gobblet.Logic.Board do
                 data = List.replace_at(board.data, pos2, [piece1 | stack])
                 case winner(data) do
                   nil -> {:ok, %Logic.Board{board | data: data}}
+                  :ok -> {:draw, %Logic.Board{board | data: data}}
                   symbol -> {:win, symbol, %Logic.Board{board | data: data}}
                 end
               true ->
@@ -71,12 +68,33 @@ defmodule Gobblet.Logic.Board do
   end
 
   def winner(data) do
-    do_winner(Enum.map(data, fn e -> 
-      case Enum.at(e, 0) do
-        nil -> nil
-        l -> Enum.at(l, 0)
-      end
-    end))
+    data0 = 
+      Enum.map(data, fn e -> 
+        case Enum.at(e, 0) do
+          nil -> nil
+          l -> Enum.at(l, 0)
+        end
+      end)
+    x_data = 
+      Enum.map(data0, fn e ->
+        case e do
+          :x -> :x
+          _  -> nil  
+        end
+      end)
+    o_data = 
+      Enum.map(data0, fn e ->
+        case e do
+          :o -> :o
+          _  -> nil  
+        end
+      end)
+    case {do_winner(x_data), do_winner(o_data)} do
+      {nil, nil} -> nil
+      {nil, :o}  -> :o
+      {:x, nil}  -> :x
+      _          -> :ok 
+    end
   end
 
   defp do_winner([
