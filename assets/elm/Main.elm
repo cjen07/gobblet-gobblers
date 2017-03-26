@@ -112,6 +112,7 @@ init flags =
 
 type Msg 
   = None
+  | Concede String
   | OnJoinOk JD.Value
   | OnJoinError
   | NewGame
@@ -180,7 +181,14 @@ update msg model =
   let
     { visible, flags, self, stats, board, dragState } = model
   in
-    case log "msg" msg of
+    case msg of
+      Concede symbol ->
+        let
+          push = 
+            Push.init ("game:" ++ model.flags.msg) "concede"
+              |> Push.withPayload (JE.object [ ("symbol", JE.string symbol) ])
+        in
+          model ! [ Phoenix.push echoServer push ]
       OnJoinOk resp ->
         let
           newSelf = 
@@ -419,6 +427,24 @@ infoView dragState =
       in
         text ("You have picked up a " ++ size ++ "-size piece.")
 
+
+buttonView : Bool -> String -> Html Msg
+buttonView newgame self =
+  let
+    (msg, value, buttonType) = 
+      case newgame of
+        True -> (Concede self, "Concede", "btn-danger")
+        False -> (NewGame, "New Game", "btn-success")
+  in
+    button 
+      [ id "newgame_concede"
+      , classList 
+        [ ("btn " ++ buttonType, True)
+        ]
+      , onClick msg 
+      ]
+      [ text value ]
+
 boardView : Model -> Html Msg
 boardView model = 
   let
@@ -485,17 +511,8 @@ boardView model =
         ]
       ]
     , div 
-      [ class "text-center" ] 
-      [ button 
-        [ id "new_game"
-        , classList 
-          [ ("btn btn-primary", True)
-          , ("hidden", visible.newgame)
-          ]
-        , onClick NewGame 
-        ]
-        [ text "NEW GAME" ] 
-      ]
+      [ classList [ ("text-center", True), ("hidden", visible.game) ] ] 
+      [ buttonView visible.newgame self ]
     , div 
       [ class "text-center" ] 
       [ h3 

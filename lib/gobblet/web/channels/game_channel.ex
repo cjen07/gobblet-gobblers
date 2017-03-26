@@ -59,6 +59,13 @@ defmodule Gobblet.Web.GameChannel do
     {:noreply, socket}
   end
 
+  def handle_in("concede", %{"symbol" => symbol}, socket) do
+    game = Logic.GameSupervisor.game_process(socket.assigns.game)
+    {:winner, _symbol, game_state} = Logic.Game.concede(game, String.to_atom(symbol))
+    broadcast! socket, "finish_game", game_state
+    {:noreply, socket}
+  end
+
   def handle_info({:after_join, game_state}, socket) do
     broadcast! socket, "new_player", game_state
     {:noreply, socket}
