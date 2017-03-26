@@ -23,10 +23,10 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [x] test and publish
 
 ### to-do for user experience
-- [x] better ui design with color 
+- [x] better ui design with color
+- [x] add unique id support using symbol
 - [ ] show info when you pick up a piece
 - [ ] need way to notify error not omit it
-- [ ] add unique id support like email
 - [ ] show hidden pieces no need memorizing
 
 
