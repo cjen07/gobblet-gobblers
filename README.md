@@ -11,6 +11,8 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
+Play online: [link](https://immense-fjord-94074.herokuapp.com/)
+
 ### to-do
 - [x] use phoenix v1.3
 - [x] replace js by elm
@@ -24,6 +26,9 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [ ] add unique id support like email
 - [ ] show hidden piece with no memory needed
 - [ ] better ui design with color and animation
+
+### to-do for special rules
+- [ ] after a player moves a piece, if both players have 3 pieces in a line, the game ties
 
 ### remark
 * this repo is highly encouraged by this [repo](https://github.com/ventsislaf/talks).
