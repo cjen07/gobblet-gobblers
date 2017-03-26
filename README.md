@@ -15,14 +15,14 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-### to-do
+### to-do -> v1.0
 - [x] use phoenix v1.3
 - [x] replace js by elm
 - [x] add gobblet logic
 - [x] add gobblet view
 - [x] test and publish
 
-### to-do for user experience
+### to-do for ux
 - [x] better ui design with color
 - [x] add unique id support using symbol
 - [x] show info when you pick up a piece
@@ -30,6 +30,16 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 ### to-do for special rules
 - [ ] after a player moves a piece, if both players have 3 pieces in a line, the game ties
+
+### to-do for better ux
+- [ ] stats bar should always be centered
+- [ ] be responsive to different screen sizes
+- [ ] no logout, no login input again
+- [ ] add logo, background and a better board
+
+### to-do for system
+- [ ] game data logger
+- [ ] websocket moniter
 
 ### remark
 * this repo is highly encouraged by this [repo](https://github.com/ventsislaf/talks).
