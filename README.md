@@ -1,5 +1,5 @@
-## gobblet
-gobblet game in elixir, phoenix and elm
+## gobblet gobblers
+gobblet gobblers game in elixir, phoenix and elm
 
 To start your Phoenix server:
 
