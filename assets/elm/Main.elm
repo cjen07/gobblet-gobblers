@@ -383,20 +383,41 @@ piecesView symbol my_turn pieces =
       ]
 
 
-dragEvent : Bool -> Int -> Array (List Piece) -> Msg
-dragEvent start num data =
-  case get num data of
-    Just data1 -> 
-      case List.head data1 of
-        Just piece ->
-          DragMsg piece num
-        _ ->
-          case start of
-            True -> DragMsg (Piece "" "" 0) num
-            False -> None
-    _ -> 
-      None
+dragEvent : Bool -> Bool -> String -> Int -> Array (List Piece) -> Msg
+dragEvent my_turn start self num data =
+  case my_turn of
+    False -> None
+    True ->
+      case get num data of
+        Nothing -> None
+        Just data1 -> 
+          case List.head data1 of
+            Nothing ->
+              case start of
+                True -> DragMsg (Piece "" "" 0) num
+                False -> None
+            Just piece ->
+              case start of
+                True -> DragMsg piece num
+                False ->     
+                  case piece.symbol == self of
+                    True -> DragMsg piece num
+                    False -> None
 
+
+infoView : DragState -> Html Msg
+infoView dragState =
+  case dragState.start of
+    False -> text ""
+    True ->
+      let
+        size = 
+          case dragState.piece.size of
+            1 -> "small"
+            2 -> "middle"
+            _ -> "large"
+      in
+        text ("You have picked up a " ++ size ++ "-size piece.")
 
 boardView : Model -> Html Msg
 boardView model = 
@@ -404,6 +425,7 @@ boardView model =
     { visible, flags, self, stats, board, dragState } = model
     { data, pieces, next } = board
     start = dragState.start
+    my_turn = self == next
   in
   div [] 
     [ div 
@@ -415,19 +437,19 @@ boardView model =
     , table 
       [ id "game", attribute "data-name" flags.msg, classList [ ("hidden", visible.game) ] ]
       [ tr [ class "top" ]
-        [ td [ id "index_0", class "left", onClick (dragEvent start 0 data) ] [ dataView 0 data ]
-        , td [ id "index_1", onClick (dragEvent start 1 data) ] [ dataView 1 data ]
-        , td [ id "index_2", class "right", onClick (dragEvent start 2 data) ] [ dataView 2 data ]
+        [ td [ id "index_0", class "left", onClick (dragEvent my_turn start self 0 data) ] [ dataView 0 data ]
+        , td [ id "index_1", onClick (dragEvent my_turn start self 1 data) ] [ dataView 1 data ]
+        , td [ id "index_2", class "right", onClick (dragEvent my_turn start self 2 data) ] [ dataView 2 data ]
         ]
       , tr []
-        [ td [ id "index_3", class "left", onClick (dragEvent start 3 data) ] [ dataView 3 data ]
-        , td [ id "index_4", onClick (dragEvent start 4 data) ] [ dataView 4 data ]
-        , td [ id "index_5", class "right", onClick (dragEvent start 5 data) ] [ dataView 5 data ]
+        [ td [ id "index_3", class "left", onClick (dragEvent my_turn start self 3 data) ] [ dataView 3 data ]
+        , td [ id "index_4", onClick (dragEvent my_turn start self 4 data) ] [ dataView 4 data ]
+        , td [ id "index_5", class "right", onClick (dragEvent my_turn start self 5 data) ] [ dataView 5 data ]
         ]
       , tr [ class "bottom" ]
-        [ td [ id "index_6", class "left", onClick (dragEvent start 6 data) ] [ dataView 6 data ]
-        , td [ id "index_7", onClick (dragEvent start 7 data) ] [ dataView 7 data ]
-        , td [ id "index_8", class "right", onClick (dragEvent start 8 data) ] [ dataView 8 data ]
+        [ td [ id "index_6", class "left", onClick (dragEvent my_turn start self 6 data) ] [ dataView 6 data ]
+        , td [ id "index_7", onClick (dragEvent my_turn start self 7 data) ] [ dataView 7 data ]
+        , td [ id "index_8", class "right", onClick (dragEvent my_turn start self 8 data) ] [ dataView 8 data ]
         ]
       ]
     , div 
@@ -473,6 +495,16 @@ boardView model =
         , onClick NewGame 
         ]
         [ text "NEW GAME" ] 
+      ]
+    , div 
+      [ class "text-center" ] 
+      [ h3 
+        [ id "game_info"
+        , classList 
+          [ ("hidden", not start)
+          ] 
+        ]
+        [ infoView dragState ] 
       ]
     ]
 
