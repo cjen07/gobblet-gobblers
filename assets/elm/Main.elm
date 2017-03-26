@@ -12,6 +12,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
+import Svg exposing (svg, circle)
+import Svg.Attributes as SA
+
 import Array exposing (Array, repeat, get)
 
 import Debug exposing (log)
@@ -301,11 +304,37 @@ dataView num data =
     Just data1 -> 
       case List.head data1 of
         Just piece ->
-          text (toString(piece.size) ++ piece.symbol)
+          drawPiece "large" piece
         _ ->
           text ""
     _ -> 
       text ""
+
+
+drawPiece : String -> Piece -> Html Msg
+drawPiece size piece =
+  let
+    r0 =
+      case size of
+        "small" -> 20
+        _ -> 60
+    r1 = 
+      case piece.size of
+        1 -> r0 / 2
+        2 -> r0 / 3 * 2.2
+        _ -> r0
+    color =
+      case piece.symbol of
+        "x" -> "blue"
+        _ -> "orange"
+    edge = toString (2 * r0 + 10)
+    viewbox = "0 0 " ++ edge ++ " " ++ edge
+    s0 = toString (r0 + 5)
+    s1 = toString r1 
+  in
+    svg
+      [ SA.width edge, SA.height edge, SA.viewBox viewbox ]
+      [ circle [ SA.cx s0, SA.cy s0, SA.r s1, SA.fill color ] [] ]
 
 
 pickPieces : String -> (Int, Piece) -> Bool
@@ -320,23 +349,19 @@ pickEvent my_turn piece =
     False -> None
 
 
-showPiece : Bool -> Int -> Int -> Int -> (Int, Piece) -> Html Msg
-showPiece my_turn first last index int_piece =
+showPiece : Bool -> Int -> (Int, Piece) -> Html Msg
+showPiece my_turn index int_piece =
   let
     (pos, piece) = int_piece
   in
     td
-      [ classList [ ("left", index == first), ("right", index == last) ], onClick (pickEvent my_turn piece) ]
-      [ text (toString(piece.size) ++ piece.symbol) ]
+      [ classList [ ("no_border", True) ], onClick (pickEvent my_turn piece) ]
+      [ drawPiece "small" piece ]
 
 
 showPieces : Bool -> Array (Int, Piece) -> List (Html Msg)
 showPieces my_turn pieces =
-  let
-    first = 0
-    last = (Array.length pieces) - 1
-  in
-    Array.toList <| Array.indexedMap (showPiece my_turn first last) pieces
+  Array.toList <| Array.indexedMap (showPiece my_turn) pieces
 
 
 piecesView : String -> Bool -> Array Piece -> Html Msg
@@ -405,7 +430,6 @@ boardView model =
             [ id "x_turn", classList [ ("turn", True), ("hidden", next /= "x") ] ]
             [ text "⇨" ]
           , span [ id "x_name" ] [ text stats.xName ]
-          , span [] [ text "(x)" ]
           ]
         , div [ id "x_score", class "score" ] [ text <| toString <| stats.xScore ]
         , (piecesView "x" (next == "x") pieces)
@@ -420,7 +444,6 @@ boardView model =
         [ div 
           [ class "name" ]
           [ span [ id "o_name" ] [ text stats.oName ]
-          , span [] [ text "(o)" ]
           , span
             [ id "o_turn", classList [ ("turn", True), ("hidden", next /= "o") ] ]
             [ text "⇦" ]

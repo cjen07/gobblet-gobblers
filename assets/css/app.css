@@ -5,12 +5,11 @@ table {
 }
 
 table td {
-  width: 130px;
-  height: 130px;
+  width: 142px;
+  height: 142px;
   border: 2px solid #000;
   text-align: center;
   vertical-align: middle;
-  font-size: 90px;
 }
 
 table.pieces td {
@@ -19,7 +18,6 @@ table.pieces td {
   border: 2px solid #000;
   text-align: center;
   vertical-align: middle;
-  font-size: 30px;
 }
 
 tr.top td {
@@ -36,6 +34,22 @@ table td.left {
 
 table td.right {
   border-right: none;
+}
+
+table td.no_border {
+  border:none;
+}
+
+svg {
+  margin-top: 5px;
+}
+
+#x {
+  color: blue;
+}
+
+#o {
+  color: orange;
 }
 
 .msg {
