@@ -25,7 +25,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 ### to-do for user experience
 - [x] better ui design with color
 - [x] add unique id support using symbol
-- [ ] show info when you pick up a piece
+- [x] show info when you pick up a piece
 - [ ] need way to notify error not omit it
 - [ ] show hidden pieces no need memorizing
 
