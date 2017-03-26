@@ -22,14 +22,14 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [x] add gobblet view
 - [x] test and publish
 
-### to-do for ux
+### to-do for ux -> v2.0
 - [x] better ui design with color
 - [x] add unique id support using symbol
 - [x] show info when you pick up a piece
 - [x] add "Concede" button to give up
 
-### to-do for special rules
-- [ ] after a player moves a piece, if both players have 3 pieces in a line, the game ties
+### to-do for special rules -> v2.0
+- [x] after a player moves a piece, if both players have 3 pieces in a line, the game ties
 
 ### to-do for better ux
 - [ ] stats bar should always be centered
