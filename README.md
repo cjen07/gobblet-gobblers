@@ -26,9 +26,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [x] better ui design with color
 - [x] add unique id support using symbol
 - [x] show info when you pick up a piece
-- [ ] need way to notify error not omit it
-- [ ] show hidden pieces no need memorizing
-
+- [x] add "Concede" button to give up
 
 ### to-do for special rules
 - [ ] after a player moves a piece, if both players have 3 pieces in a line, the game ties
