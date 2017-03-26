@@ -80,7 +80,8 @@ type alias DragState =
 
 type alias Model =
   { visible : Visible
-  , flags : Flags 
+  , flags : Flags
+  , self : String 
   , stats : Stats
   , board : Board
   , dragState : DragState
@@ -102,7 +103,7 @@ init flags =
     dragState =
       DragState False (Piece "" "" 0) 0
   in 
-    (Model visible (log "flags" flags) stats board dragState, Cmd.none)
+    (Model visible flags "" stats board dragState, Cmd.none)
 
 
 
@@ -111,7 +112,7 @@ init flags =
 
 type Msg 
   = None
-  | OnJoinOk
+  | OnJoinOk JD.Value
   | OnJoinError
   | NewGame
   | DragMsg Piece Int
@@ -177,11 +178,17 @@ updateStats resp =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   let
-    { visible, flags, stats, board, dragState } = model
+    { visible, flags, self, stats, board, dragState } = model
   in
-    case msg of
-      OnJoinOk ->
-        model ! []
+    case log "msg" msg of
+      OnJoinOk resp ->
+        let
+          newSelf = 
+            case JD.decodeValue JD.string resp of
+              Ok symbol -> symbol
+              Err _ -> ""
+        in
+          { model | self = newSelf } ! []
       OnJoinError ->
         { model | visible = { visible | full = False } } ! []
       NewGame ->
@@ -262,7 +269,7 @@ socket player =
 channel : String -> Channel Msg
 channel gameName = 
   Channel.init ("game:" ++ gameName)
-    |> Channel.onJoin (\_ -> OnJoinOk)
+    |> Channel.onJoin OnJoinOk
     |> Channel.onJoinError (\_ -> OnJoinError)
     |> Channel.on "new_player" NewPlayer
     |> Channel.on "player_left" PlayerLeft
@@ -376,15 +383,17 @@ piecesView symbol my_turn pieces =
       ]
 
 
-dragEvent : Int -> Array (List Piece) -> Msg
-dragEvent num data =
+dragEvent : Bool -> Int -> Array (List Piece) -> Msg
+dragEvent start num data =
   case get num data of
     Just data1 -> 
       case List.head data1 of
         Just piece ->
           DragMsg piece num
         _ ->
-          DragMsg (Piece "" "" 0) num
+          case start of
+            True -> DragMsg (Piece "" "" 0) num
+            False -> None
     _ -> 
       None
 
@@ -392,8 +401,9 @@ dragEvent num data =
 boardView : Model -> Html Msg
 boardView model = 
   let
-    { visible, flags, stats, board, dragState } = model
+    { visible, flags, self, stats, board, dragState } = model
     { data, pieces, next } = board
+    start = dragState.start
   in
   div [] 
     [ div 
@@ -405,19 +415,19 @@ boardView model =
     , table 
       [ id "game", attribute "data-name" flags.msg, classList [ ("hidden", visible.game) ] ]
       [ tr [ class "top" ]
-        [ td [ id "index_0", class "left", onClick (dragEvent 0 data) ] [ dataView 0 data ]
-        , td [ id "index_1", onClick (dragEvent 1 data) ] [ dataView 1 data ]
-        , td [ id "index_2", class "right", onClick (dragEvent 2 data) ] [ dataView 2 data ]
+        [ td [ id "index_0", class "left", onClick (dragEvent start 0 data) ] [ dataView 0 data ]
+        , td [ id "index_1", onClick (dragEvent start 1 data) ] [ dataView 1 data ]
+        , td [ id "index_2", class "right", onClick (dragEvent start 2 data) ] [ dataView 2 data ]
         ]
       , tr []
-        [ td [ id "index_3", class "left", onClick (dragEvent 3 data) ] [ dataView 3 data ]
-        , td [ id "index_4", onClick (dragEvent 4 data) ] [ dataView 4 data ]
-        , td [ id "index_5", class "right", onClick (dragEvent 5 data) ] [ dataView 5 data ]
+        [ td [ id "index_3", class "left", onClick (dragEvent start 3 data) ] [ dataView 3 data ]
+        , td [ id "index_4", onClick (dragEvent start 4 data) ] [ dataView 4 data ]
+        , td [ id "index_5", class "right", onClick (dragEvent start 5 data) ] [ dataView 5 data ]
         ]
       , tr [ class "bottom" ]
-        [ td [ id "index_6", class "left", onClick (dragEvent 6 data) ] [ dataView 6 data ]
-        , td [ id "index_7", onClick (dragEvent 7 data) ] [ dataView 7 data ]
-        , td [ id "index_8", class "right", onClick (dragEvent 8 data) ] [ dataView 8 data ]
+        [ td [ id "index_6", class "left", onClick (dragEvent start 6 data) ] [ dataView 6 data ]
+        , td [ id "index_7", onClick (dragEvent start 7 data) ] [ dataView 7 data ]
+        , td [ id "index_8", class "right", onClick (dragEvent start 8 data) ] [ dataView 8 data ]
         ]
       ]
     , div 
@@ -432,7 +442,7 @@ boardView model =
           , span [ id "x_name" ] [ text stats.xName ]
           ]
         , div [ id "x_score", class "score" ] [ text <| toString <| stats.xScore ]
-        , (piecesView "x" (next == "x") pieces)
+        , (piecesView "x" (next == "x" && self == "x") pieces)
         ]
       , div 
         [ id "ties", class "block" ] 
@@ -449,7 +459,7 @@ boardView model =
             [ text "⇦" ]
           ]
         , div [ id "o_score", class "score" ] [ text <| toString <| stats.oScore ]
-        , (piecesView "o" (next == "o") pieces)
+        , (piecesView "o" (next == "o" && self == "o") pieces)
         ]
       ]
     , div 

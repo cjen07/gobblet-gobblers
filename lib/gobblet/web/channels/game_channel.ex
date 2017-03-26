@@ -14,7 +14,7 @@ defmodule Gobblet.Web.GameChannel do
           socket
           |> assign(:game, name)
           |> assign(:symbol, symbol)
-        {:ok, game_state, socket}
+        {:ok, symbol, socket}
       :error ->
         {:error, %{reason: "full game"}}
     end
