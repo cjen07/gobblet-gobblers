@@ -1,7 +1,7 @@
 ## gobblet gobblers
 gobblet gobblers game in elixir, phoenix and elm
 
-Play online: [playground](https://immense-fjord-94074.herokuapp.com/)
+Play online: [playground](https://immense-fjord-94074.herokuapp.com/) (v1.0 not lastest)
 
 Rules: [gobblet-gobblers](https://github.com/cjen07/gobblet-gobblers/blob/master/rules/gobblet%20gobblers%20rules.pdf)
 
@@ -23,11 +23,12 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [x] test and publish
 
 ### to-do for user experience
+- [x] better ui design with color 
 - [ ] show info when you pick up a piece
 - [ ] need way to notify error not omit it
 - [ ] add unique id support like email
-- [ ] show hidden piece with no memory needed
-- [ ] better ui design with color and animation
+- [ ] show hidden pieces no need memorizing
+
 
 ### to-do for special rules
 - [ ] after a player moves a piece, if both players have 3 pieces in a line, the game ties
