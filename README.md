@@ -1,6 +1,10 @@
 ## gobblet gobblers
 gobblet gobblers game in elixir, phoenix and elm
 
+Play online: [playground](https://immense-fjord-94074.herokuapp.com/)
+
+Rules: [gobblet-gobblers](https://github.com/cjen07/gobblet-gobblers/blob/master/rules/gobblet%20gobblers%20rules.pdf)
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
@@ -10,8 +14,6 @@ To start your Phoenix server:
   * Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Play online: [link](https://immense-fjord-94074.herokuapp.com/)
 
 ### to-do
 - [x] use phoenix v1.3
