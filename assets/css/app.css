@@ -102,11 +102,17 @@ svg {
   h3 {
     margin-top: -0.5em;
   }
+  #button {
+    margin-top: 0em;
+  }
 }
 
 @media (orientation: portrait) {
   h3 {
     margin-top: 0.5em;
+  }
+  #button {
+    margin-top: 1.4em;
   }
 }
 
