@@ -251,7 +251,10 @@ update msg model =
       FinishGame resp ->
         case (updateBoard resp, updateStats resp) of
           (Just board, Just stats) ->
-            { model | visible = { visible | newgame = False }, board = board, stats = stats } ! []
+            { model | visible = { visible | newgame = False }
+                    , board = board
+                    , stats = stats
+                    , dragState = (DragState False (Piece "" "" 0) 0) } ! []
           _ ->
             model ! []
       None ->
