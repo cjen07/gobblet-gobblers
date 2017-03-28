@@ -32,8 +32,8 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [x] after a player moves a piece, if both players have 3 pieces in a line, the game ties
 
 ### to-do for better ux
-- [ ] stats bar should always be centered
-- [ ] be responsive to different screen sizes
+- [x] stats bar should always be centered
+- [x] be responsive to different screen sizes
 - [ ] no logout, no login input again
 - [ ] add logo, background and a better board
 
