@@ -1,7 +1,7 @@
 ## gobblet gobblers
 gobblet gobblers game in elixir, phoenix and elm
 
-Play online: [playground](https://immense-fjord-94074.herokuapp.com/) (v2.0 lastest)
+Play online: [playground](https://immense-fjord-94074.herokuapp.com/) (v2.1-nightly lastest)
 
 Rules: [gobblet-gobblers](https://github.com/cjen07/gobblet-gobblers/blob/master/rules/gobblet%20gobblers%20rules.pdf)
 
