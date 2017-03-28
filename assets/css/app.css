@@ -98,6 +98,18 @@ svg {
   right: -0.625em;
 }
 
+@media (orientation: landscape) {
+  h3 {
+    margin-top: -0.5em;
+  }
+}
+
+@media (orientation: portrait) {
+  h3 {
+    margin-top: 0.5em;
+  }
+}
+
 #empty {
   min-height: 3em;
   max-height: 3em;

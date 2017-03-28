@@ -417,7 +417,7 @@ dragEvent my_turn start self num data =
 infoView : DragState -> Html Msg
 infoView dragState =
   case dragState.start of
-    False -> div [ id "empty", class "col-xs-12" ] [ h3 [] [] ]
+    False -> div [ id "empty", class "col-xs-12 col-md-12" ] [ h3 [] [] ]
     True ->
       let
         size = 
@@ -427,7 +427,7 @@ infoView dragState =
             _ -> "large"
       in
         div 
-          [ class "text-center" ] 
+          [ id "empty", class "text-center col-xs-12 col-md-12" ] 
           [ h3 
             [ id "game_info" ]
             [ text ("pick up a " ++ size ++ " piece") ] 
@@ -519,7 +519,7 @@ boardView model =
       ]
     , infoView dragState
     , div 
-      [ id "button", classList [ ("text-center", True), ("hidden", visible.game) ] ] 
+      [ id "button", classList [ ("text-center col-xs-12 col-md-12", True), ("hidden", visible.game) ] ] 
       [ buttonView visible.newgame self ]
     ]
 
