@@ -10,8 +10,14 @@
 
 /* Space out content a bit */
 body, form, ul, table {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+@media (orientation: portrait) {
+  body, form, ul, table {
+    font-size: 100%;
+  }
 }
 
 /* Phoenix flash messages */

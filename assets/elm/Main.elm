@@ -331,8 +331,8 @@ drawPiece size piece =
   let
     r0 =
       case size of
-        "small" -> 20
-        _ -> 60
+        "small" -> 1
+        _ -> 3
     r1 = 
       case piece.size of
         1 -> r0 / 2
@@ -342,13 +342,14 @@ drawPiece size piece =
       case piece.symbol of
         "x" -> "blue"
         _ -> "orange"
-    edge = toString (2 * r0 + 10)
+    edge = toString (2 * r0 + 0.6)
     viewbox = "0 0 " ++ edge ++ " " ++ edge
-    s0 = toString (r0 + 5)
-    s1 = toString r1 
+    s0 = toString (r0 + 0.3)
+    s1 = toString r1
+    r_edge = edge ++ "em"
   in
     svg
-      [ SA.width edge, SA.height edge, SA.viewBox viewbox ]
+      [ SA.width r_edge, SA.height r_edge, SA.viewBox viewbox ]
       [ circle [ SA.cx s0, SA.cy s0, SA.r s1, SA.fill color ] [] ]
 
 
@@ -425,7 +426,7 @@ infoView dragState =
             2 -> "middle"
             _ -> "large"
       in
-        text ("You have picked up a " ++ size ++ "-size piece.")
+        text ("pick up a " ++ size ++ " piece")
 
 
 buttonView : Bool -> String -> Html Msg
@@ -481,7 +482,7 @@ boardView model =
     , div 
       [ id "stats", classList [ ("hidden", visible.game) ] ]
       [ div 
-        [ id "x", class "block" ]
+        [ id "x", class "block col-md-4 col-xs-12" ]
         [ div 
           [ class "name" ]
           [ span
@@ -493,12 +494,12 @@ boardView model =
         , (piecesView "x" (next == "x" && self == "x") pieces)
         ]
       , div 
-        [ id "ties", class "block" ] 
+        [ id "ties", class "block col-md-4 col-xs-12" ] 
         [ div [ class "name" ] [ text "ties" ]
         , div [ id "ties_score", class "score" ] [ text <| toString <| stats.tiesScore ]
         ]
       , div 
-        [ id "o", class "block" ]
+        [ id "o", class "block col-md-4 col-xs-12" ]
         [ div 
           [ class "name" ]
           [ span [ id "o_name" ] [ text stats.oName ]
@@ -511,7 +512,7 @@ boardView model =
         ]
       ]
     , div 
-      [ classList [ ("text-center", True), ("hidden", visible.game) ] ] 
+      [ id "button", classList [ ("text-center", True), ("hidden", visible.game) ] ] 
       [ buttonView visible.newgame self ]
     , div 
       [ class "text-center" ] 

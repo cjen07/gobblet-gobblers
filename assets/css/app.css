@@ -5,17 +5,17 @@ table {
 }
 
 table td {
-  width: 142px;
-  height: 142px;
-  border: 2px solid #000;
+  width: 8em;
+  height: 8em;
+  border: 0.2em solid #000;
   text-align: center;
   vertical-align: middle;
 }
 
 table.pieces td {
-  width: 50px;
-  height: 50px;
-  border: 2px solid #000;
+  width: 3em;
+  height: 3em;
+  border: 0.2em solid #000;
   text-align: center;
   vertical-align: middle;
 }
@@ -41,7 +41,7 @@ table td.no_border {
 }
 
 svg {
-  margin-top: 5px;
+  margin-top: 0.5em;
 }
 
 #x {
@@ -53,32 +53,35 @@ svg {
 }
 
 .msg {
-  margin-top: 200px;
-  font-size: 40px;
+  margin-top: 16.5em;
+  font-size: 2.5em;
   font-weight: bold;
   text-align: center;
 }
 
 #stats {
   text-align: center;
-  margin-top: 80px;
-  margin-bottom: 30px;
+  margin-top: 5em;
+  margin-bottom: 1.872em;
+}
+
+#ties {
+  text-align: center;
 }
 
 .block {
   display: inline-block;
   text-align: center;
-  margin: 0 30px;
 }
 
 .name {
-  font-size: 26px;
-  padding: 0 26px;
+  font-size: 1.625em;
+  padding: 0 1.625em;
   position: relative;
 }
 
 .score {
-  font-size: 30px;
+  font-size: 1.872em;
   font-weight: bold;
 }
 
@@ -88,19 +91,19 @@ svg {
 }
 
 #x_turn {
-  left: -10px;
+  left: -0.625em;
 }
 
 #o_turn {
-  right: -10px;
+  right: -0.625em;
 }
 
 .form {
   text-align: center;
-  width: 300px;
-  margin: 200px auto;
+  width: 18.72em;
+  margin: 16.5em auto;
 }
 
 .header {
-  font-size: 16px;
+  font-size: 1em;
 }
