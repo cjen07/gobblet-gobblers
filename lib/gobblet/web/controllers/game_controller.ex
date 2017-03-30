@@ -1,5 +1,4 @@
 defmodule Gobblet.Web.GameController do
-  import Plug.Conn
   use Gobblet.Web, :controller
 
   plug :scrub_params, "game" when action in [:create]
@@ -16,7 +15,6 @@ defmodule Gobblet.Web.GameController do
         |> render("new.html")
       name ->
         conn
-        |> assign(:game, name)
         |> redirect(to: game_path(conn, :show, name))
     end
   end
