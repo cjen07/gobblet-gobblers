@@ -198,7 +198,7 @@ update msg model =
         in
           { model | self = newSelf } ! []
       OnJoinError ->
-        { model | visible = { visible | full = False, game = True } } ! []
+        { model | visible = { visible | full = False } } ! []
       NewGame ->
         let
           push = 
