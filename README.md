@@ -39,7 +39,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [ ] add logo, background and a better board
 
 ### to-do for system
-- [ ] add github link
+- [x] add github link
 - [ ] add automatic pairing
 - [ ] game data logger
 - [ ] websocket moniter
