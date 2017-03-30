@@ -4,7 +4,11 @@ defmodule Gobblet.Web.PlayerController do
   plug :scrub_params, "player" when action in [:create]
 
   def new(conn, _params) do
-    render conn, "new.html"
+    if conn.assigns.current_player do
+      redirect(conn, to: game_path(conn, :new))
+    else
+      render conn, "new.html"
+    end
   end
 
   def create(conn, %{"player" => player_params}) do
