@@ -34,6 +34,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 ### to-do for better ux
 - [x] stats bar should always be centered
 - [x] be responsive to different screen sizes
+- [ ] install banners and add to homescreen
 - [ ] no logout, no login input again
 - [ ] add logo, background and a better board
 
