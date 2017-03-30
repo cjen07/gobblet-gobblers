@@ -198,7 +198,7 @@ update msg model =
         in
           { model | self = newSelf } ! []
       OnJoinError ->
-        { model | visible = { visible | full = False } } ! []
+        { model | visible = { visible | full = False, game = True } } ! []
       NewGame ->
         let
           push = 
@@ -468,7 +468,7 @@ boardView model =
       [ id "full", classList [ ("msg", True), ("hidden", visible.full) ] ] 
       [ text "Sorry, the game is already full :(" ]
     , div 
-      [ id "waiting", classList [ ("msg", True), ("hidden", not visible.game) ] ] 
+      [ id "waiting", classList [ ("msg", True), ("hidden", not (visible.game && visible.full) ) ] ] 
       [ text "Waiting for a second player..." ]
     , table 
       [ id "game", attribute "data-name" flags.msg, classList [ ("hidden", visible.game) ] ]
