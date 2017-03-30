@@ -127,6 +127,23 @@ svg {
   margin: 16.5em auto;
 }
 
-.header {
-  font-size: 1em;
+@media (orientation: landscape) {
+  .header {
+    font-size: 1.25em;
+  }
+}
+
+@media (orientation: portrait) {
+  .header {
+    font-size: 1.5em;
+  }
+}
+
+.github {
+  width: 2em;
+  height: 2em;
+  display: inline-block;
+  margin-bottom: -0.5em;
+  background-image: url("/images/Octocat.png");
+  background-size: 2em 2em;
 }

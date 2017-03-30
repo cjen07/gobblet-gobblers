@@ -18,6 +18,7 @@
           <%= if @conn.assigns.current_player do %>
             <%= @conn.assigns.current_player %> (<%= link "logout", to: player_path(@conn, :delete, @conn.assigns.current_player), method: :delete %>)
           <% end %>
+          <a class="github" href="https://github.com/cjen07/gobblet-gobblers"></a>
         </div>
       </header>
 
