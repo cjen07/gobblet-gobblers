@@ -37,6 +37,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [x] no re-login without logout, add back button
 - [ ] install banners and add to homescreen
 - [ ] add logo, background and a better board
+- [ ] add user instruction on init
 
 ### to-do for system
 - [x] add github link
