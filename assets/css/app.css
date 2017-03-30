@@ -1,3 +1,24 @@
+@media (orientation: portrait) {
+  body, form, ul, table {
+    font-size: 100%;
+  }
+}
+
+@media (orientation: landscape) {
+  body, form, ul, table {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+}
+
+/* Phoenix flash messages */
+.alert:empty { display: none; }
+
+/* Phoenix inline forms in links and buttons */
+form.link, form.button {
+  display: inline;
+}
+
 table {
   border-collapse: collapse;
   margin: 0 auto;
@@ -12,12 +33,24 @@ table td {
   vertical-align: middle;
 }
 
-table.pieces td {
-  width: 3em;
-  height: 3em;
-  border: 0.2em solid #000;
-  text-align: center;
-  vertical-align: middle;
+@media (orientation: landscape) {
+  table.pieces td {
+    width: 3em;
+    height: 3em;
+    border: 0.2em solid #000;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+
+@media (orientation: portrait) {
+  table.pieces td {
+    width: 4em;
+    height: 3em;
+    border: 0.2em solid #000;
+    text-align: center;
+    vertical-align: middle;
+  }
 }
 
 tr.top td {
@@ -42,6 +75,10 @@ table td.no_border {
 
 svg {
   margin-top: 0.5em;
+}
+
+#game {
+  margin-top: 2em;
 }
 
 #x {
@@ -91,12 +128,12 @@ svg {
 }
 
 #x_turn {
-  margin-top: 1em;
+  margin-top: 0.8em;
   left: 2em;
 }
 
 #o_turn {
-  margin-top: 1em;
+  margin-top: 0.8em;
   right: 2em;
 }
 
@@ -133,11 +170,24 @@ svg {
   .header {
     font-size: 1.25em;
   }
+  .back {
+    margin-top: 0.5em;
+    float: left;
+    margin-left: 3em;
+    display: inline-block;
+  }
 }
 
 @media (orientation: portrait) {
   .header {
+    margin-top: 0.5em;
     font-size: 1.5em;
+  }
+  .back {
+    margin-top: 0.3em;
+    float: left;
+    margin-left: 0.6em;
+    display: inline-block;
   }
 }
 
@@ -145,14 +195,7 @@ svg {
   width: 2em;
   height: 2em;
   display: inline-block;
-  margin-bottom: -0.5em;
+  margin-bottom: -0.7em;
   background-image: url("/images/Octocat.png");
   background-size: 2em 2em;
-}
-
-.back {
-  margin-top: 0.5em;
-  margin-left: 0.5em;
-  float: left;
-  display: inline-block;
 }
