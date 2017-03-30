@@ -1,24 +1,3 @@
-@media (orientation: portrait) {
-  body, form, ul, table {
-    font-size: 100%;
-  }
-}
-
-@media (orientation: landscape) {
-  body, form, ul, table {
-    margin-top: 1em;
-    margin-bottom: 1em;
-  }
-}
-
-/* Phoenix flash messages */
-.alert:empty { display: none; }
-
-/* Phoenix inline forms in links and buttons */
-form.link, form.button {
-  display: inline;
-}
-
 table {
   border-collapse: collapse;
   margin: 0 auto;
