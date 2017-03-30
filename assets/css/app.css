@@ -91,11 +91,13 @@ svg {
 }
 
 #x_turn {
-  left: -0.625em;
+  margin-top: 1em;
+  left: 2em;
 }
 
 #o_turn {
-  right: -0.625em;
+  margin-top: 1em;
+  right: 2em;
 }
 
 @media (orientation: landscape) {
@@ -146,4 +148,11 @@ svg {
   margin-bottom: -0.5em;
   background-image: url("/images/Octocat.png");
   background-size: 2em 2em;
+}
+
+.back {
+  margin-top: 0.5em;
+  margin-left: 0.5em;
+  float: left;
+  display: inline-block;
 }

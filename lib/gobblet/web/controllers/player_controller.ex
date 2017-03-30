@@ -7,7 +7,7 @@ defmodule Gobblet.Web.PlayerController do
     if conn.assigns.current_player do
       redirect(conn, to: game_path(conn, :new))
     else
-      render conn, "new.html"
+      render conn, "new.html", name: nil
     end
   end
 
