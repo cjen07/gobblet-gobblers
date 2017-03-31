@@ -267,7 +267,7 @@ update msg model =
 
 echoServer : String
 echoServer =
-    "wss://immense-fjord-94074.herokuapp.com/socket/websocket"
+    "ws://localhost:4000/socket/websocket"
 
 
 socket : String -> Socket Msg
