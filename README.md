@@ -35,7 +35,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [x] stats bar should always be centered
 - [x] be responsive to different screen sizes
 - [x] no re-login without logout, add back button
-- [ ] install banners and add to homescreen
+- [x] add to homescreen, add icon and improve pieces
 - [ ] add logo, background and a better board
 - [ ] add user instruction on init
 
