@@ -267,7 +267,7 @@ update msg model =
 
 echoServer : String
 echoServer =
-    "ws://localhost:4000/socket/websocket"
+    "wss://immense-fjord-94074.herokuapp.com/socket/websocket"
 
 
 socket : String -> Socket Msg
@@ -332,28 +332,18 @@ dataView num data =
 drawPiece : String -> Piece -> Html Msg
 drawPiece size piece =
   let
-    r0 =
-      case size of
-        "small" -> 1
-        _ -> 3
-    r1 = 
-      case piece.size of
-        1 -> r0 / 2
-        2 -> r0 / 3 * 2.2
-        _ -> r0
-    color =
+    s1 =
       case piece.symbol of
-        "x" -> "blue"
-        _ -> "orange"
-    edge = toString (2 * r0 + 0.6)
-    viewbox = "0 0 " ++ edge ++ " " ++ edge
-    s0 = toString (r0 + 0.3)
-    s1 = toString r1
-    r_edge = edge ++ "em"
+        "x" -> "BLUE_"
+        _ -> "YELLOW_"
+    s2 = 
+      case piece.size of
+        1 -> "S"
+        2 -> "M"
+        _ -> "L"
+    s = "../images/" ++ s1 ++ s2 ++ ".png"
   in
-    svg
-      [ SA.width r_edge, SA.height r_edge, SA.viewBox viewbox ]
-      [ circle [ SA.cx s0, SA.cy s0, SA.r s1, SA.fill color ] [] ]
+    img [ src s, class (size ++ " " ++ s2) ] []
 
 
 pickPieces : String -> (Int, Piece) -> Bool
@@ -488,6 +478,7 @@ boardView model =
         , td [ id "index_8", class "right", onClick (dragEvent my_turn start self 8 data) ] [ dataView 8 data ]
         ]
       ]
+    , infoView dragState
     , div 
       [ id "stats", classList [ ("hidden", visible.game) ] ]
       [ div 
@@ -520,7 +511,6 @@ boardView model =
         , (piecesView "o" (next == "o" && self == "o") pieces)
         ]
       ]
-    , infoView dragState
     , div 
       [ id "button", classList [ ("text-center col-xs-12 col-md-12", True), ("hidden", visible.game) ] ] 
       [ buttonView visible.newgame self ]
