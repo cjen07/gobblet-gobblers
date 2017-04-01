@@ -44,6 +44,9 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [ ] game data logger
 - [ ] websocket moniter
 
+### interesting bug
+- [ ] when two players are playing, and then one player unpluges the internet, the other player will receive no msg and will result in a zombie channel (websocket) which means if one enters the channel, it is always full or one will be playing with a zombie player.
+
 ### remark
 * this repo is highly encouraged by this [repo](https://github.com/ventsislaf/talks).
 * I fixed two bugs and updated for elixir v1.4 using Registry: [repo](https://github.com/cjen07/from_tictactoe_to_gobblet).
