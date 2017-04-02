@@ -11,6 +11,10 @@ defmodule Gobblet.Logic.GameSupervisor do
     Supervisor.start_child(__MODULE__, [name])
   end
 
+  def terminate_child(pid) do
+    Supervisor.terminate_child(__MODULE__, pid)
+  end
+
   def init(_) do
     children = [
       worker(Logic.Game, [], restart: :temporary)

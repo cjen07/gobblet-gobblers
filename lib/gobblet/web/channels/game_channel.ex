@@ -14,6 +14,7 @@ defmodule Gobblet.Web.GameChannel do
           socket
           |> assign(:game, name)
           |> assign(:symbol, symbol)
+        :ok = Logic.GameWatcher.monitor(:games, self(), {__MODULE__, :leave, [name, symbol, game]})
         {:ok, symbol, socket}
       :error ->
         {:error, %{reason: "full game"}}
@@ -73,9 +74,22 @@ defmodule Gobblet.Web.GameChannel do
     {:noreply, socket}
   end
 
+  def handle_info({:after_leave, _game_state}, socket) do
+    game = Logic.GameSupervisor.game_process(socket.assigns.game)
+    Logic.Game.leave(game, socket.assigns.symbol)
+    broadcast! socket, "player_left", %{}
+    {:noreply, socket}
+  end
+
   def terminate(_reason, socket) do
     game = Logic.GameSupervisor.game_process(socket.assigns.game)
     Logic.Game.leave(game, socket.assigns.symbol)
     broadcast! socket, "player_left", %{}
+    :ok = Logic.GameWatcher.demonitor(:games, self())
+  end
+
+  def leave(name, symbol, pid) do
+    Logger.info "internet disconnect -> " <> "game: " <> name <> " symbol: " <> to_string(symbol)
+    Logic.GameSupervisor.terminate_child(pid)
   end
 end

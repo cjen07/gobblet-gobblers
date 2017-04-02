@@ -17,7 +17,8 @@ defmodule Gobblet.Application do
       # Start your own worker by calling: Gobblet.Worker.start_link(arg1, arg2, arg3)
       # worker(Gobblet.Worker, [arg1, arg2, arg3]),
       supervisor(Logic.GameSupervisor, []),
-      supervisor(Registry, [:unique, Registry.Gobblet])
+      supervisor(Registry, [:unique, Registry.Gobblet]),
+      worker(Logic.GameWatcher, [:games])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
