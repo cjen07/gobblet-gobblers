@@ -181,7 +181,7 @@ update msg model =
   let
     { visible, flags, self, stats, board, dragState } = model
   in
-    case msg of
+    case log "msg" msg of
       Concede symbol ->
         let
           push = 
@@ -231,7 +231,7 @@ update msg model =
           _ ->
             { model | visible = { visible | game = True } } ! []
       PlayerLeft _ ->
-        { model | visible = { visible | newgame = True, game = True } } ! []
+        { model | visible = { visible | newgame = True, game = True }, dragState = (DragState False (Piece "" "" 0) 0) } ! []
       UpdateBoard resp ->
         case updateBoard resp of
           Just board ->

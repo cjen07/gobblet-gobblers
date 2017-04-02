@@ -182,7 +182,7 @@ svg {
 @media (orientation: portrait) {
   .header {
     margin-top: 0.5em;
-    font-size: 1.5em;
+    font-size: 2em;
   }
   .back {
     margin-top: 0.3em;
