@@ -45,7 +45,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - [ ] websocket moniter
 
 ### interesting bug
-- [ ] when two players are playing, and then one player unpluges the internet, the other player will receive no msg and will result in a zombie channel (websocket) which means if one enters the channel, it is always full or one will be playing with a zombie player.
+- [x] when two players are playing, and then one player unpluges the internet, the other player will receive no msg and will result in a zombie channel (websocket) which means if one enters the channel, it is always full or one will be playing with a zombie player. fixed zombie behaviour with a delay by [this](http://stackoverflow.com/questions/33934029/how-to-detect-if-a-user-left-a-phoenix-channel-due-to-a-network-disconnect) or to try presense in elm-phoenix new [merges](https://github.com/saschatimme/elm-phoenix/pull/18)
 
 ### remark
 * this repo is highly encouraged by this [repo](https://github.com/ventsislaf/talks).
