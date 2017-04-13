@@ -49,6 +49,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 ### fix me
 - [ ] safari add-to-homescreen back button leading to pages with search bar
+- [ ] remove embedded alerts
 
 ### remark
 * this repo is highly encouraged by this [repo](https://github.com/ventsislaf/talks).
